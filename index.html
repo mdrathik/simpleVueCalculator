@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Vue Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        .heading {
+            margin: 50px;
+            ;
+        }
+
+        [v-cloak]>* {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app" v-cloak>
+        <h1 class="heading text-center">{{appName}}</h1>
+        <hr />
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-7 card">
+                    <div class="row card-body">
+                        <div class="col-12 alert alert-danger" role="alert" v-if="hasError">
+                            Sorry ! Entered input is not number
+                        </div>
+
+                        <div class="col-12 alert alert-success" role="alert" v-else>
+                            Result = {{result}}
+                        </div>
+
+                        <div class="inputDiv col-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Enter First Number</label>
+                                <input type="text" v-model="first_number" class="form-control" placeholder="Ex : 20"
+                                    v-on:keyup="checkError">
+
+                            </div>
+                        </div>
+                        <div class="inputDiv col-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Enter Second Number</label>
+                                <input type="text" name="sec" v-model="second_number" class="form-control"
+                                    placeholder="Ex : 10" v-on:keyup="checkError">
+                            </div>
+                        </div>
+
+
+                        <div class="options col-12">
+                            <div class="row" v-if="first_number != '' && second_number!= '' ">
+                                <button v-bind:disabled="hasError" class="btn btn-primary col-2"
+                                    v-on:click="plusButton">+</button>
+                                <button v-bind:disabled="hasError" class="btn btn-primary col-2 offset-1"
+                                    v-on:click="minusButton">-</button>
+                                <button v-bind:disabled="hasError" class="btn btn-primary col-2 offset-1"
+                                    v-on:click="multiplicationButton">*</button>
+                                <button v-bind:disabled="hasError" class="btn btn-primary col-2 offset-1"
+                                    v-on:click="divisorButton">/</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="max-height: 200px;" class="col-4 offset-1">
+                    <span>History</span>
+                    <ul v-for="(item, index) in history" :key="index">
+                        <li style="font-size:12px">{{item.first_number}} {{item.action}} {{item.second_number}} =
+                            {{item.result}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            appName: "Simple VueJs Calculator",
+            first_number: "",
+            second_number: "",
+            hasError: false,
+            result: 0,
+            history: []
+
+        },
+        methods: {
+            plusButton() {
+                this.result = parseInt(this.first_number) + parseInt(this.second_number);
+                this.history.push({
+                    "first_number": this.first_number,
+                    "second_number": this.second_number,
+                    "action": "+",
+                    "result": this.result,
+                });
+            },
+
+            minusButton() {
+                this.result = parseInt(this.first_number) - parseInt(this.second_number);
+                this.history.push({
+                    "first_number": this.first_number,
+                    "second_number": this.second_number,
+                    "action": "-",
+                    "result": this.result,
+                });
+            },
+
+            multiplicationButton() {
+                this.result = parseInt(this.first_number) * parseInt(this.second_number);
+                this.history.push({
+                    "first_number": this.first_number,
+                    "second_number": this.second_number,
+                    "action": "*",
+                    "result": this.result,
+                });
+            },
+            divisorButton() {
+                this.result = (parseInt(this.first_number) / parseInt(this.second_number)).toFixed(
+                    3);
+                this.history.push({
+                    "first_number": this.first_number,
+                    "second_number": this.second_number,
+                    "action": "/",
+                    "result": this.result,
+                });
+            },
+
+            checkError() {
+                if (isNaN(this.first_number) || isNaN(this.second_number) || this.first_number === "" || this
+                    .second_number === "") {
+                    this
+                        .hasError = true;
+                    this.result = 0;
+                } else this.hasError = false;
+            }
+        },
+    });
+</script>
+
+</html>
